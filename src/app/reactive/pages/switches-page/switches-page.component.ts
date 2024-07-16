@@ -1,19 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   templateUrl: './switches-page.component.html',
   styles: ``
 })
-export class SwitchesPageComponent {
+export class SwitchesPageComponent implements OnInit {
 
   constructor( private fb: FormBuilder ) { }
+  
+  ngOnInit(): void {
+    this.myForm.reset( this.person );
+  }
 
   public myForm: FormGroup = this.fb.group({
     gender: [ 'M', Validators.required ],
     wantNotifications: [ true, Validators.required ],
     termsAndCondition: [ false, Validators.requiredTrue ],
   });
+
+  public person = {
+    gender: 'F',
+    wantNotifications: false
+  };
 
   isValidField( field: string ): boolean | null {
     return this.myForm.controls[field].errors 
@@ -27,11 +36,17 @@ export class SwitchesPageComponent {
     }
 
     console.log(this.myForm.value);
-    this.myForm.reset({
-      gender: 'M',
-      wantNotifications: false,
-      termsAndCondition: false
-    });
+    // this.myForm.reset({
+    //   gender: 'M',
+    //   wantNotifications: false,
+    //   termsAndCondition: false
+    // });
+
+    const { termsAndCondition, ...newPerson } = this.myForm.value;
+
+    this.person = newPerson;
+    console.log(this.myForm.value);
+    console.log(this.person)
 
   }
 
